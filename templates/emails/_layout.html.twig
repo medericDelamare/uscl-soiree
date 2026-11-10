@@ -1,15 +1,44 @@
 <!DOCTYPE html>
-<html lang="fr">
-<body style="margin:0;padding:0;background:#f5f7fa;font-family:Arial,Helvetica,sans-serif;color:#111418;">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f5f7fa;padding:24px 12px;">
-    <tr><td align="center">
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background:#ffffff;border-radius:10px;overflow:hidden;">
-            <tr><td style="height:6px;line-height:6px;font-size:0;background:linear-gradient(90deg,#2e7d4f 33%,#ffffff 33% 66%,#c8102e 66%);">&nbsp;</td></tr>
-            <tr><td style="background:#c8102e;color:#ffffff;padding:20px 24px;font-size:20px;font-weight:bold;text-transform:uppercase;letter-spacing:.5px;">
-                US Cormeilles Lieurey<br><span style="font-size:12px;letter-spacing:2px;opacity:.85;">Soirée dansante</span>
+<html lang="fr" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light">
+    <meta name="supported-color-schemes" content="light">
+    <title>{% block title %}US Cormeilles Lieurey{% endblock %}</title>
+    <style>
+        @media only screen and (max-width: 620px) {
+            .container { width: 100% !important; }
+            .px { padding-left: 20px !important; padding-right: 20px !important; }
+            .stack { display: block !important; width: 100% !important; }
+            .stack-gap { padding-top: 12px !important; }
+            .qr { width: 200px !important; height: 200px !important; }
+        }
+    </style>
+</head>
+<body style="margin:0;padding:0;background:#eef1f5;font-family:Arial,Helvetica,sans-serif;color:#111418;-webkit-text-size-adjust:100%;">
+{# Texte d'aperçu affiché dans la liste des mails, invisible dans le message #}
+<div style="display:none;max-height:0;overflow:hidden;opacity:0;color:#eef1f5;font-size:1px;line-height:1px;">{% block preheader %}{% endblock %}&#8199;&zwnj;&#8199;&zwnj;&#8199;&zwnj;&#8199;&zwnj;</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#eef1f5;">
+    <tr><td align="center" style="padding:24px 12px;">
+        <table role="presentation" class="container" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px;max-width:600px;background:#ffffff;border-radius:14px;overflow:hidden;">
+            {# Liseré tricolore (3 cellules : un dégradé CSS n'est pas pris en charge partout) #}
+            <tr><td style="font-size:0;line-height:0;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+                    <td width="34%" height="6" style="height:6px;line-height:6px;font-size:0;background:#2e7d4f;">&nbsp;</td>
+                    <td width="33%" height="6" style="height:6px;line-height:6px;font-size:0;background:#ffffff;">&nbsp;</td>
+                    <td width="33%" height="6" style="height:6px;line-height:6px;font-size:0;background:#c8102e;">&nbsp;</td>
+                </tr></table>
             </td></tr>
-            <tr><td style="padding:24px;font-size:15px;line-height:1.5;">{% block content %}{% endblock %}</td></tr>
-            <tr><td style="padding:16px 24px;background:#111418;color:#8b929c;font-size:12px;">{{ club.name }} · {{ club.email }}</td></tr>
+            <tr><td class="px" style="background:#c8102e;padding:26px 32px;" bgcolor="#c8102e">
+                <div style="font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#ffd9de;font-weight:bold;">Soirée dansante</div>
+                <div style="font-size:26px;line-height:1.2;font-weight:bold;color:#ffffff;margin-top:6px;">US Cormeilles Lieurey</div>
+            </td></tr>
+            <tr><td class="px" style="padding:32px;font-size:15px;line-height:1.6;color:#111418;">{% block content %}{% endblock %}</td></tr>
+            <tr><td class="px" style="padding:20px 32px;background:#111418;color:#9aa1ab;font-size:12px;line-height:1.6;" bgcolor="#111418">
+                <strong style="color:#ffffff;">{{ club.name }}</strong><br>
+                <a href="mailto:{{ club.email }}" style="color:#9aa1ab;text-decoration:underline;">{{ club.email }}</a>
+            </td></tr>
         </table>
     </td></tr>
 </table>

@@ -1,14 +1,69 @@
 {% extends 'emails/_layout.html.twig' %}
 
+{% block title %}Votre réservation {{ booking.reference }}{% endblock %}
+{% block preheader %}C'est confirmé ! Voici votre billet pour la soirée du {{ event.date|format_datetime(pattern: 'd MMMM', locale: 'fr') }}.{% endblock %}
+
 {% block content %}
-    <p>Bonjour {{ booking.firstName }},</p>
-    <p>Merci ! Votre paiement est bien reçu : votre réservation <strong>{{ booking.reference }}</strong> est confirmée.</p>
-    <p><strong>{{ event.date|format_datetime('full', 'none', locale: 'fr')|capitalize }} à {{ event.date|date('H') }}h</strong><br>{{ event.place }}</p>
-    <ul>
-        {% for guest in booking.guests %}<li>{{ guest.fullName }} ({{ guest.age }} ans) : {{ guest.meal.label }}{% if guest.comment %} (remarque : {{ guest.comment }}){% endif %}</li>{% endfor %}
-    </ul>
-    <p>Total payé : <strong>{{ (booking.total / 100)|format_currency('EUR', locale: 'fr') }}</strong></p>
-    <p style="text-align:center;margin:24px 0;"><img src="cid:{{ qr_cid }}" alt="QR code du billet" width="240" height="240"><br><strong>Ce QR code est votre billet</strong> : montrez-le à l'entrée, sur votre téléphone ou imprimé. Il vaut pour les {{ booking.guests|length }} personne{{ booking.guests|length > 1 ? 's' }} de la réservation.</p>
-    <p style="text-align:center;"><a href="{{ url('booking_show', {token: booking.accessToken}) }}" style="background:#c8102e;color:#ffffff;text-decoration:none;font-weight:bold;padding:12px 22px;border-radius:999px;display:inline-block;">Voir ma réservation</a></p>
-    <p>À très vite !<br>Le bureau de l'US Cormeilles Lieurey</p>
+    <h1 style="margin:0 0 8px;font-size:24px;line-height:1.25;color:#111418;">C'est confirmé, {{ booking.firstName }} ! 🎉</h1>
+    <p style="margin:0 0 24px;color:#4a515c;">Votre paiement est bien reçu. Votre réservation <strong style="color:#111418;">{{ booking.reference }}</strong> est validée : on se retrouve pour la soirée.</p>
+
+    {# Date et lieu #}
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f6f8fb;border-radius:12px;">
+        <tr>
+            <td class="stack" width="96" align="center" style="padding:18px 8px 18px 18px;vertical-align:middle;">
+                <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="width:80px;background:#ffffff;border:1px solid #dfe3ea;border-radius:10px;overflow:hidden;">
+                    <tr><td align="center" style="background:#c8102e;color:#ffffff;font-size:12px;font-weight:bold;letter-spacing:2px;padding:5px 0;">{{ event.date|format_datetime(pattern: 'MMM', locale: 'fr')|upper|replace({'.': ''}) }}</td></tr>
+                    <tr><td align="center" style="font-size:34px;font-weight:bold;line-height:1.1;padding:8px 0 10px;color:#111418;">{{ event.date|date('j') }}</td></tr>
+                </table>
+            </td>
+            <td class="stack stack-gap" style="padding:18px 18px 18px 8px;vertical-align:middle;">
+                <div style="font-size:17px;font-weight:bold;color:#111418;">{{ event.date|format_datetime(pattern: 'EEEE d MMMM y', locale: 'fr')|capitalize }}</div>
+                <div style="font-size:14px;color:#4a515c;margin-top:4px;">{{ event.date|date('H\\hi') }} · {{ event.place }}</div>
+            </td>
+        </tr>
+    </table>
+
+    {# Convives #}
+    <h2 style="margin:32px 0 10px;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#c8102e;">Vos convives · {{ booking.guests|length }}</h2>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-top:1px solid #e5e8ee;">
+        {% for guest in booking.guests %}
+            <tr>
+                <td style="padding:12px 0;border-bottom:1px solid #e5e8ee;font-size:15px;vertical-align:top;">
+                    <strong style="color:#111418;">{{ guest.fullName }}</strong> <span style="color:#7a828e;">· {{ guest.age }} ans</span>
+                    {% if guest.comment %}<div style="font-size:13px;color:#7a828e;margin-top:3px;">Remarque : {{ guest.comment }}</div>{% endif %}
+                </td>
+                <td align="right" style="padding:12px 0 12px 12px;border-bottom:1px solid #e5e8ee;font-size:14px;color:#4a515c;vertical-align:top;">{{ guest.meal.label }}</td>
+            </tr>
+        {% endfor %}
+        <tr>
+            <td style="padding:14px 0 0;font-size:15px;color:#4a515c;">Total payé</td>
+            <td align="right" style="padding:14px 0 0;font-size:20px;font-weight:bold;color:#111418;">{{ (booking.total / 100)|format_currency('EUR', locale: 'fr') }}</td>
+        </tr>
+    </table>
+
+    {# Billet #}
+    <h2 style="margin:36px 0 12px;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#c8102e;">Votre billet</h2>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border:2px dashed #c8102e;border-radius:14px;">
+        <tr><td align="center" style="padding:24px 16px 8px;">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="background:#ffffff;border:1px solid #dfe3ea;border-radius:10px;"><tr><td style="padding:10px;">
+                <img class="qr" src="cid:{{ qr_cid }}" alt="QR code du billet" width="240" height="240" style="display:block;width:240px;height:240px;border:0;">
+            </td></tr></table>
+        </td></tr>
+        <tr><td align="center" style="padding:8px 20px 4px;font-size:13px;letter-spacing:2px;color:#7a828e;text-transform:uppercase;">Réf. {{ booking.reference }}</td></tr>
+        <tr><td align="center" style="padding:6px 20px 24px;font-size:14px;line-height:1.5;color:#4a515c;">
+            <strong style="color:#111418;">Ce QR code est votre billet.</strong><br>
+            Montrez-le à l'entrée, sur votre téléphone ou imprimé.<br>
+            Il vaut pour les {{ booking.guests|length }} personne{{ booking.guests|length > 1 ? 's' }} de la réservation.
+        </td></tr>
+    </table>
+
+    {# Bouton #}
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:28px;">
+        <tr><td align="center">
+            <a href="{{ url('booking_show', {token: booking.accessToken}) }}" style="background:#c8102e;color:#ffffff;text-decoration:none;font-weight:bold;font-size:15px;padding:14px 28px;border-radius:999px;display:inline-block;">Voir ma réservation</a>
+        </td></tr>
+    </table>
+
+    <p style="margin:32px 0 0;font-size:15px;color:#111418;">À très vite !<br><strong>Le bureau de l'US Cormeilles Lieurey</strong></p>
+    <p style="margin:16px 0 0;font-size:12px;line-height:1.5;color:#7a828e;">Une question sur votre réservation ? Écrivez-nous à <a href="mailto:{{ club.email }}" style="color:#7a828e;">{{ club.email }}</a>.</p>
 {% endblock %}
