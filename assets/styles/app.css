@@ -1,0 +1,134 @@
+/* Soirée US Cormeilles Lieurey : trattoria italienne (nappe à carreaux, tomate, basilic) avec l'écusson du club */
+@font-face { font-family: 'Playfair Display'; font-style: normal; font-weight: 700; font-display: swap; src: url('../fonts/playfair-normal-700.woff2') format('woff2'); }
+@font-face { font-family: 'Playfair Display'; font-style: italic; font-weight: 700; font-display: swap; src: url('../fonts/playfair-italic-700.woff2') format('woff2'); }
+@font-face { font-family: 'Inter'; font-style: normal; font-weight: 400 700; font-display: swap; src: url('../fonts/inter-variable.woff2') format('woff2'); }
+
+:root {
+    --red: #c8102e; --red-dark: #9d0c24; --red-light: #fdecee;
+    --green: #2e7d4f; --green-dark: #1f5c38; --green-light: #e6f3ea;
+    --blue: #0050a1;
+    --cream: #fbf4e4; --paper: #fffdf8;
+    --ink: #2d1b12; --muted: #6f5d52; --line: #eadfc8;
+    --success: #1f5c38; --warning: #a35c00; --danger: #c0262d;
+    --radius: 14px; --shadow: 0 1px 2px rgba(45, 27, 18, .08), 0 6px 20px rgba(45, 27, 18, .08);
+    --font-title: 'Playfair Display', Georgia, 'Times New Roman', serif;
+    --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --gingham: linear-gradient(90deg, rgba(200, 16, 46, .5) 50%, transparent 50%), linear-gradient(rgba(200, 16, 46, .5) 50%, transparent 50%);
+}
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; font-family: var(--font-body); color: var(--ink); background: var(--cream); line-height: 1.55; font-size: 16px; }
+img { max-width: 100%; }
+a { color: var(--green-dark); }
+h1, h2 { font-family: var(--font-title); font-weight: 700; line-height: 1.12; margin: 0 0 .5em; color: var(--red-dark); }
+h1 { font-size: clamp(2rem, 5.5vw, 3.2rem); font-style: italic; }
+h2 { font-size: 1.6rem; }
+.container { width: 100%; max-width: 920px; margin: 0 auto; padding: 0 16px; }
+.section { padding-top: 28px; padding-bottom: 52px; }
+.muted { color: var(--muted); } .small { font-size: .875rem; }
+
+/* Drapeau italien */
+.tricolor { height: 6px; background: linear-gradient(90deg, var(--green) 0 33.34%, #fff 33.34% 66.66%, var(--red) 66.66%); }
+
+.header { background: var(--paper); border-bottom: 1px solid var(--line); }
+.header__inner { display: flex; align-items: center; gap: 16px; min-height: 76px; }
+.brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink); }
+.brand img { width: 42px; height: auto; }
+.brand__name { font-family: var(--font-title); font-weight: 700; font-size: 1.25rem; line-height: 1.05; }
+.brand__name small { display: block; font-family: var(--font-title); font-style: italic; font-size: .95rem; color: var(--red); margin-top: 3px; }
+.nav { margin-left: auto; display: flex; gap: 14px; }
+.nav a { text-decoration: none; font-weight: 600; font-size: .9rem; color: var(--green-dark); }
+
+/* Hero : nappe à carreaux, carte de menu posée dessus */
+.hero { background-color: #fff; background-image: var(--gingham); background-size: 44px 44px; border-bottom: 1px solid var(--line); }
+.hero__inner { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, .5fr); align-items: center; gap: 24px; padding: 40px 16px; }
+.hero__inner > div { background: var(--paper); border: 2px solid var(--red); outline: 6px solid var(--paper); border-radius: var(--radius); padding: 26px 28px; box-shadow: var(--shadow); }
+.hero__inner > div p { margin: 0 0 10px; }
+.eyebrow { font-family: var(--font-title); font-style: italic; color: var(--green-dark); font-size: 1.2rem; margin: 0 0 4px !important; }
+.hero__date { font-size: 1.2rem; font-weight: 600; }
+.hero__menu { color: var(--muted); }
+.hero__crest { justify-self: center; width: min(190px, 50vw); height: auto; padding: 14px; background: var(--paper); border-radius: 50%; border: 3px solid var(--green); box-shadow: var(--shadow); }
+@media (max-width: 680px) { .hero__inner { grid-template-columns: 1fr; padding: 28px 16px; } .hero__crest { width: 120px; grid-row: 1; } .hero__inner > div { padding: 20px; } }
+
+.card { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 22px; margin: 0 0 18px; min-width: 0; }
+fieldset.card legend { font-family: var(--font-title); font-style: italic; font-size: 1.45rem; font-weight: 700; padding: 0 8px; color: var(--red-dark); }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; }
+.grid3 { display: grid; grid-template-columns: 1fr 1fr 100px; gap: 0 12px; }
+@media (max-width: 640px) { .grid2, .grid3 { grid-template-columns: 1fr; } }
+
+label { display: block; font-weight: 600; font-size: .9rem; margin-bottom: 4px; }
+input[type=text], input[type=email], input[type=tel], input[type=number], input[type=password], input[type=search] { width: 100%; font: inherit; padding: 11px 13px; border: 1.5px solid #d9c9a8; border-radius: 10px; background: #fff; color: var(--ink); }
+input::placeholder { color: #a89886; }
+input:focus-visible, button:focus-visible, a:focus-visible { outline: 3px solid #8fd0a8; outline-offset: 1px; }
+.field, form > div > div { margin-bottom: 12px; }
+form ul:not([class]), .form-error { color: var(--danger); font-size: .875rem; list-style: none; padding: 0; margin: 4px 0; }
+.help-text, .form-text { color: var(--muted); font-size: .8rem; }
+.check { display: flex; gap: 8px; align-items: center; font-weight: 400; }
+
+/* Une carte par convive */
+.guest { border: 1px solid var(--line); border-left: 6px solid var(--green); border-radius: var(--radius); padding: 16px; margin-bottom: 14px; background: #fff; }
+.guest__head { display: flex; justify-content: space-between; margin-bottom: 8px; font-family: var(--font-title); font-style: italic; font-size: 1.1rem; }
+.guest__remove { border: 0; background: none; color: var(--danger); font: inherit; font-family: var(--font-body); font-style: normal; font-size: .85rem; cursor: pointer; }
+.guest .comment { margin: 4px 0 12px; }
+
+/* Choix du plat : deux cartes cliquables */
+.meals > label { margin-bottom: 6px; }
+.meals > div[id] { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+@media (max-width: 520px) { .meals > div[id] { grid-template-columns: 1fr; } }
+.meals input[type=radio] { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.meals input[type=radio] + label { margin: 0; display: flex; align-items: center; gap: 10px; padding: 14px 16px; border: 2px solid #d9c9a8; border-radius: 12px; background: #fff; cursor: pointer; font-weight: 600; font-size: 1rem; }
+.meals input[type=radio] + label::before { content: ''; flex: none; width: 20px; height: 20px; border: 2px solid #a89886; border-radius: 50%; background: #fff; }
+.meals input[type=radio] + label::after { margin-left: auto; font-size: 1.5rem; line-height: 1; }
+.meals input[value=lasagne] + label::after { content: '🍝'; }
+.meals input[value=assiette_anglaise] + label::after { content: '🧀'; }
+.meals input[type=radio]:checked + label { border-color: var(--red); background: var(--red-light); color: var(--red-dark); }
+.meals input[type=radio]:checked + label::before { border-color: var(--red); background: radial-gradient(circle, var(--red) 0 45%, #fff 50%); }
+.meals input[type=radio]:focus-visible + label { outline: 3px solid #8fd0a8; outline-offset: 2px; }
+.meals label.required::after, .guest label.required::after { content: none; }
+
+/* Case de consentement : la case, puis son texte */
+form div:has(> input[type=checkbox]) { display: flex; flex-direction: row-reverse; justify-content: flex-end; gap: 10px; align-items: flex-start; margin-bottom: 14px; }
+form div:has(> input[type=checkbox]) label { font-weight: 400; margin: 0; }
+form div > input[type=checkbox] { width: 20px; height: 20px; margin-top: 2px; flex: none; accent-color: var(--red); }
+
+.seats { display: inline-block; background: var(--green-light); color: var(--green-dark); font-weight: 700; padding: 6px 16px; border-radius: 999px; border: 1px solid #b9dcc6; }
+.seats--low { background: #fff1d6; color: var(--warning); border-color: #f0d49b; }
+.total { font-family: var(--font-title); font-size: 1.6rem; margin: 0 0 12px; }
+.total strong { color: var(--red-dark); }
+.total .muted { font-family: var(--font-body); }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font: inherit; font-weight: 700; text-decoration: none; border: 2px solid transparent; border-radius: 999px; padding: 12px 24px; cursor: pointer; transition: background .15s, transform .05s; }
+.btn--primary { background: var(--red); color: #fff; box-shadow: 0 3px 0 var(--red-dark); } .btn--primary:hover { background: var(--red-dark); } .btn--primary:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--red-dark); }
+.btn--ghost { background: #fff; color: var(--green-dark); border-color: var(--green); } .btn--ghost:hover { background: var(--green-light); }
+.btn--sm { padding: 6px 14px; font-size: .875rem; }
+.btn--lg { padding: 16px 30px; font-size: 1.1rem; } .btn--block { width: 100%; }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+
+.alert { padding: 12px 16px; border-radius: 10px; margin: 12px 0 0; border: 1px solid; }
+.alert--success { background: var(--green-light); color: var(--green-dark); border-color: #b9dcc6; }
+.alert--warning { background: #fff1d6; color: var(--warning); border-color: #f0d49b; }
+.alert--danger { background: #fde8e9; color: var(--danger); border-color: #f4b8bb; }
+
+.badge { display: inline-block; font-weight: 700; padding: 4px 14px; border-radius: 999px; }
+.badge--ok { background: var(--green-light); color: var(--green-dark); } .badge--wait { background: #fff1d6; color: var(--warning); } .badge--ko { background: #fde8e9; color: var(--danger); }
+.table { width: 100%; border-collapse: collapse; } .table th, .table td { text-align: left; padding: 9px 6px; border-bottom: 1px dashed #d9c9a8; } .num { text-align: right !important; }
+.grid-ticket { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 18px; align-items: start; }
+.ticket { text-align: center; border: 2px dashed var(--red); } .ticket img { margin: 0 auto; }
+@media (max-width: 760px) { .grid-ticket { grid-template-columns: 1fr; } .ticket { order: -1; } }
+
+/* Contrôle à l'entrée */
+.counter { font-size: 1.2rem; }
+.search { display: flex; gap: 8px; }
+.result { display: flex; justify-content: space-between; gap: 8px; padding: 12px 4px; border-bottom: 1px solid var(--line); text-decoration: none; color: inherit; flex-wrap: wrap; }
+.verdict { border-radius: var(--radius); padding: 20px; font-family: var(--font-title); font-size: 2.1rem; font-weight: 700; margin-bottom: 16px; color: #fff; }
+.verdict small { display: block; font-family: var(--font-body); font-size: 1rem; font-weight: 500; }
+.verdict--ok { background: var(--green); } .verdict--warn { background: var(--warning); } .verdict--ko { background: var(--danger); }
+.entry { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 12px 0; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+.entry--done { opacity: .7; }
+.note { display: inline-block; margin-top: 4px; background: #fff1d6; color: var(--warning); font-weight: 700; padding: 2px 8px; border-radius: 6px; }
+
+.prose { max-width: 720px; }
+.footer { background: var(--ink); color: #e9dcc6; padding: 22px 0; font-size: .85rem; text-align: center; }
+.footer a { color: #fff; }
+.flashes { margin-top: 8px; }
+
+@media print { .header, .tricolor, .footer, .btn, .flashes, .card:not(.ticket) { display: none !important; } .ticket { border: 0; box-shadow: none; } }

@@ -1,0 +1,75 @@
+monolog:
+    channels: # To see all channels, run bin/console debug:autowiring logger
+        - deprecation # Deprecations are logged in the dedicated "deprecation" channel when it exists
+
+when@dev:
+    monolog:
+        handlers:
+            main:
+                type: stream
+                path: "%kernel.logs_dir%/%kernel.environment%.log"
+                level: debug
+                channels: ["!event"]
+            console:
+                type: console
+                process_psr_3_messages: false
+                channels: ["!event", "!doctrine", "!console"]
+
+when@test:
+    monolog:
+        handlers:
+            main:
+                type: fingers_crossed
+                action_level: error
+                handler: nested
+                excluded_http_codes: [404, 405]
+                channels: ["!event"]
+            nested:
+                type: stream
+                path: "%kernel.logs_dir%/%kernel.environment%.log"
+                level: debug
+
+when@prod:
+    monolog:
+        handlers:
+            # Errors are written with the requests that led to them, in var/log/prod-YYYY-MM-DD.log (30 days kept)
+            main:
+                type: fingers_crossed
+                action_level: error
+                handler: nested
+                excluded_http_codes: [404, 405]
+                channels: ["!deprecation"]
+                buffer_size: 50 # How many messages should be saved? Prevent memory leaks
+            nested:
+                type: rotating_file
+                path: "%kernel.logs_dir%/%kernel.environment%.log"
+                level: debug
+                max_files: 30
+            # ...and e-mailed to SOIREE_EMAIL_ADMIN, at most once an hour for the same message
+            alert:
+                type: fingers_crossed
+                action_level: error
+                handler: alert_deduplicated
+                excluded_http_codes: [404, 405]
+                channels: ["!deprecation", "!mailer"] # the alert's own sending is logged on "mailer"
+                buffer_size: 50
+            alert_deduplicated:
+                type: deduplication
+                handler: alert_safe
+                time: 3600
+            # A mail failure (SMTP down) must never break the request that logged the error
+            alert_safe:
+                type: whatfailuregroup
+                members: [alert_mailer]
+            alert_mailer:
+                type: symfony_mailer
+                from_email: '%env(SOIREE_EMAIL_FROM)%'
+                to_email: '%env(SOIREE_EMAIL_ADMIN)%'
+                subject: '[Soirée USCL] Erreur : %%message%%'
+                level: debug
+                formatter: monolog.formatter.html
+                content_type: text/html
+            console:
+                type: console
+                process_psr_3_messages: false
+                channels: ["!event", "!doctrine"]

@@ -1,0 +1,45 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content_title %}Tableau de bord{% endblock %}
+
+{% block main %}
+    <div class="row g-3 mb-4">
+        <div class="col-md-3"><div class="card"><div class="card-body"><div class="text-muted">Places prises</div><div class="fs-2 fw-bold">{{ taken }} / {{ event.capacity }}</div><div class="text-muted small">{{ pending }} réservation(s) en attente de paiement</div></div></div></div>
+        <div class="col-md-3"><div class="card"><div class="card-body"><div class="text-muted">Adultes ({{ (event.adultPrice / 100)|format_currency('EUR', locale: 'fr') }})</div><div class="fs-2 fw-bold">{{ adults }}</div></div></div></div>
+        <div class="col-md-3"><div class="card"><div class="card-body"><div class="text-muted">Enfants ({{ (event.childPrice / 100)|format_currency('EUR', locale: 'fr') }})</div><div class="fs-2 fw-bold">{{ children }}</div></div></div></div>
+        <div class="col-md-3"><div class="card"><div class="card-body"><div class="text-muted">Encaissé</div><div class="fs-2 fw-bold">{{ (revenue / 100)|format_currency('EUR', locale: 'fr') }}</div></div></div></div>
+    </div>
+
+    {% if remarks %}
+        <div class="card mb-4"><div class="card-header fw-bold">Régimes et allergies à signaler au traiteur ({{ remarks|length }})</div>
+        <ul class="list-group list-group-flush">
+            {% for g in remarks %}<li class="list-group-item"><strong>{{ g.fullName }}</strong> ({{ g.meal.label }}) : {{ g.comment }}</li>{% endfor %}
+        </ul></div>
+    {% endif %}
+
+    <div class="row g-3">
+        <div class="col-lg-6">
+            <div class="card"><div class="card-header fw-bold">Pour le traiteur (places payées)</div>
+            <table class="table mb-0">
+                <thead><tr><th>Plat</th><th class="text-end">Adultes</th><th class="text-end">Enfants</th><th class="text-end">Total</th></tr></thead>
+                <tbody>
+                {% for row in rows %}
+                    <tr><td>{{ row.meal.label }}</td><td class="text-end">{{ row.adult }}</td><td class="text-end">{{ row.child }}</td><td class="text-end fw-bold">{{ row.adult + row.child }}</td></tr>
+                {% endfor %}
+                <tr class="fw-bold"><td>Total</td><td class="text-end">{{ adults }}</td><td class="text-end">{{ children }}</td><td class="text-end">{{ adults + children }}</td></tr>
+                </tbody>
+            </table>
+            <div class="card-body"><a class="btn btn-primary" href="{{ path('admin_export') }}">Télécharger l'Excel</a></div></div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card"><div class="card-header fw-bold">Dernières réservations payées</div>
+            <ul class="list-group list-group-flush">
+                {% for b in latest %}
+                    <li class="list-group-item d-flex justify-content-between"><span>{{ b.fullName }} · {{ b.guests|length }} place(s)</span><span class="text-muted">{{ b.paidAt|format_datetime('short', 'short', locale: 'fr') }}</span></li>
+                {% else %}
+                    <li class="list-group-item text-muted">Aucune réservation payée pour le moment.</li>
+                {% endfor %}
+            </ul></div>
+        </div>
+    </div>
+{% endblock %}

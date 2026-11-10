@@ -1,0 +1,5 @@
+<ul class="mb-0">
+    {% for guest in entity.instance.guests %}
+        <li>{{ guest.fullName }} · {{ guest.age }} ans · {{ guest.meal.label }}{% if guest.comment %} · ⚠ {{ guest.comment }}{% endif %} · {{ (guest.price / 100)|format_currency('EUR', locale: 'fr') }}{% if guest.checkedIn %} · ✔ entré{% endif %}</li>
+    {% endfor %}
+</ul>

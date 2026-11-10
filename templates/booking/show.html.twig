@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Réservation {{ booking.reference }}{% endblock %}
+
+{% block body %}
+    <div class="container section">
+        <h1>Réservation {{ booking.reference }}</h1>
+        <div class="grid-ticket">
+            <div class="card">
+                {% if booking.paid %}
+                    <p class="badge badge--ok">✔ Payée</p>
+                    <p>Merci {{ booking.firstName }} ! Présentez ce billet à l'entrée (sur votre téléphone ou imprimé). Il est aussi dans votre e-mail ({{ booking.email }}).</p>
+                {% elseif booking.status.value == 'cancelled' %}
+                    <p class="badge badge--ko">Annulée</p>
+                    <p>Cette réservation a expiré faute de paiement. <a href="{{ path('home') }}">Faire une nouvelle réservation</a>.</p>
+                {% else %}
+                    <p class="badge badge--wait">En attente de paiement</p>
+                    <p>Votre réservation n'est confirmée qu'après le paiement. Les places sont retenues {{ event.holdMinutes }} minutes.</p>
+                    <form method="post" action="{{ path('booking_pay', {token: booking.accessToken}) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('pay' ~ booking.id) }}">
+                        <button class="btn btn--primary" type="submit">Payer {{ (booking.total / 100)|format_currency('EUR', locale: 'fr') }} avec HelloAsso</button>
+                    </form>
+                {% endif %}
+
+                <h2>{{ event.name }}</h2>
+                <p>{{ event.date|format_datetime('full', 'none', locale: 'fr')|capitalize }} à {{ event.date|date('H') }}h<br>{{ event.place }}</p>
+                <table class="table">
+                    <thead><tr><th>Convive</th><th>Plat</th><th class="num">Prix</th></tr></thead>
+                    <tbody>
+                    {% for guest in booking.guests %}
+                        <tr><td>{{ guest.fullName }} <span class="muted">({{ guest.age }} ans)</span>{% if guest.comment %}<br><span class="muted small">Remarque : {{ guest.comment }}</span>{% endif %}</td><td>{{ guest.meal.label }}</td><td class="num">{{ (guest.price / 100)|format_currency('EUR', locale: 'fr') }}</td></tr>
+                    {% endfor %}
+                    </tbody>
+                    <tfoot><tr><th colspan="2">Total</th><th class="num">{{ (booking.total / 100)|format_currency('EUR', locale: 'fr') }}</th></tr></tfoot>
+                </table>
+            </div>
+            {% if qr %}
+                <div class="card ticket">
+                    <img src="{{ qr }}" alt="QR code du billet {{ booking.reference }}" width="260" height="260">
+                    <p><strong>{{ booking.reference }}</strong><br>{{ booking.guests|length }} place{{ booking.guests|length > 1 ? 's' }}</p>
+                    <button type="button" class="btn btn--ghost" onclick="window.print()">Imprimer le billet</button>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

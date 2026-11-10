@@ -1,0 +1,14 @@
+<div class="guest" data-guest>
+    <div class="guest__head"><strong data-guest-title>Personne {{ number }}</strong><button type="button" class="guest__remove" data-remove-guest aria-label="Retirer cette personne">Retirer ✕</button></div>
+    <div class="grid3">
+        {{ form_row(guest.firstName) }}
+        {{ form_row(guest.lastName) }}
+        {{ form_row(guest.age) }}
+    </div>
+    <div class="comment">{{ form_row(guest.comment) }}</div>
+    <div class="meals">
+        {{ form_label(guest.meal) }}
+        {{ form_errors(guest.meal) }}
+        {{ form_widget(guest.meal) }}
+    </div>
+</div>

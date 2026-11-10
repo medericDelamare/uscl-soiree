@@ -1,0 +1,26 @@
+/* Back-office aux couleurs du club */
+:root, .ea-dark-scheme {
+    --color-primary: #0050a1;
+    --sidebar-menu-color: inherit;
+}
+.uscl-muted { color: var(--text-muted, #6c757d); font-size: .85em; }
+.uscl-thumb { width: 48px; height: 48px; object-fit: contain; background: #fff; border-radius: 6px; border: 1px solid var(--border-color, #e3e7ed); }
+.uscl-campaign { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; padding: 20px; border-radius: 10px; color: #fff; background: repeating-linear-gradient(90deg, #0050a1 0 48px, #0a5bb0 48px 96px); margin-bottom: 16px; }
+.uscl-campaign h2 { margin: 2px 0; font-size: 1.6rem; }
+.uscl-campaign .uscl-muted { color: rgba(255,255,255,.85); }
+.uscl-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.uscl-campaign .btn-primary { background: #fff; color: #0050a1; border-color: #fff; }
+.uscl-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 16px; }
+.uscl-kpi, .uscl-card { background: var(--white, #fff); border: 1px solid var(--border-color, #e3e7ed); border-radius: 10px; padding: 16px; }
+.uscl-kpi span { display: block; color: var(--text-muted, #6c757d); font-size: .85rem; }
+.uscl-kpi strong { font-size: 1.8rem; color: #0050a1; }
+.uscl-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 16px; }
+.uscl-card h3 { font-size: 1.05rem; margin-bottom: 8px; }
+.uscl-colorways { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.uscl-colorway { border: 1px solid var(--border-color, #e3e7ed); border-radius: 8px; padding: 10px; font-size: .85rem; background: var(--white, #fff); }
+.uscl-colorway img { width: 100%; aspect-ratio: 1; object-fit: contain; background: #fff; margin-bottom: 6px; }
+.uscl-price-info { color: var(--text-color, #212529); }
+.uscl-price-warning { margin-top: 6px; padding: 6px 10px; border-radius: 6px; background: #fdeeee; color: #b42318; font-weight: 600; font-size: .85rem; }
+.uscl-price-warning[hidden] { display: none; }
+.uscl-kpi--profit strong { color: #198754; }
+.uscl-kpi small { display: block; color: var(--text-muted, #6c757d); font-size: .75rem; margin-top: 2px; }

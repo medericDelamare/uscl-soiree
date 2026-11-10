@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion{% endblock %}
+
+{% block body %}
+    <div class="container section" style="max-width:420px">
+        <div class="card">
+            <h1>Connexion</h1>
+            <p class="muted small">Réservé au bureau et aux bénévoles de l'entrée.</p>
+            {% if error %}<div class="alert alert--danger">Identifiants incorrects ou trop de tentatives.</div>{% endif %}
+            <form method="post">
+                <div class="field"><label for="u">E-mail</label><input id="u" type="email" name="_username" value="{{ last_username }}" autocomplete="username" required autofocus></div>
+                <div class="field"><label for="p">Mot de passe</label><input id="p" type="password" name="_password" autocomplete="current-password" required></div>
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                <label class="check"><input type="checkbox" name="_remember_me" checked> Rester connecté</label>
+                <button class="btn btn--primary" type="submit">Se connecter</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

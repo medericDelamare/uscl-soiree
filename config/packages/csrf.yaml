@@ -1,0 +1,3 @@
+# Jetons CSRF classiques (liés à la session) : aucun JavaScript requis.
+framework:
+    csrf_protection: true

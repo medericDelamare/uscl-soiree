@@ -1,0 +1,13 @@
+twig:
+    file_name_pattern: '*.twig'
+    globals:
+        event: '@App\Event\EventInfo'
+        club:
+            name: 'US Cormeilles Lieurey'
+            address: 'Mairie, rue de l''Abbaye, 27260 Cormeilles'
+            email: 'soiree@uscormeilleslieurey.fr'
+            retention_months: '%app.retention_months%'
+
+when@test:
+    twig:
+        strict_variables: true

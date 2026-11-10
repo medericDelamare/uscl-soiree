@@ -1,0 +1,13 @@
+framework:
+    rate_limiter:
+        # Formulaire d'inscription : quelques réservations par heure et par visiteur, contre les abus
+        booking:
+            policy: sliding_window
+            limit: 10
+            interval: '1 hour'
+
+when@test:
+    framework:
+        rate_limiter:
+            booking:
+                policy: no_limit

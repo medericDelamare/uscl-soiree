@@ -1,0 +1,14 @@
+{% extends 'emails/_layout.html.twig' %}
+
+{% block content %}
+    <p>Bonjour {{ booking.firstName }},</p>
+    <p>Merci ! Votre paiement est bien reçu : votre réservation <strong>{{ booking.reference }}</strong> est confirmée.</p>
+    <p><strong>{{ event.date|format_datetime('full', 'none', locale: 'fr')|capitalize }} à {{ event.date|date('H') }}h</strong><br>{{ event.place }}</p>
+    <ul>
+        {% for guest in booking.guests %}<li>{{ guest.fullName }} ({{ guest.age }} ans) : {{ guest.meal.label }}{% if guest.comment %} (remarque : {{ guest.comment }}){% endif %}</li>{% endfor %}
+    </ul>
+    <p>Total payé : <strong>{{ (booking.total / 100)|format_currency('EUR', locale: 'fr') }}</strong></p>
+    <p style="text-align:center;margin:24px 0;"><img src="cid:{{ qr_cid }}" alt="QR code du billet" width="240" height="240"><br><strong>Ce QR code est votre billet</strong> : montrez-le à l'entrée, sur votre téléphone ou imprimé. Il vaut pour les {{ booking.guests|length }} personne{{ booking.guests|length > 1 ? 's' }} de la réservation.</p>
+    <p style="text-align:center;"><a href="{{ url('booking_show', {token: booking.accessToken}) }}" style="background:#c8102e;color:#ffffff;text-decoration:none;font-weight:bold;padding:12px 22px;border-radius:999px;display:inline-block;">Voir ma réservation</a></p>
+    <p>À très vite !<br>Le bureau de l'US Cormeilles Lieurey</p>
+{% endblock %}

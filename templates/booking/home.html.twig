@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Réserver ma soirée{% endblock %}
+
+{% block body %}
+    <section class="hero">
+        <div class="container hero__inner">
+            <div>
+                <p class="eyebrow">Buona serata ! 🍝</p>
+                <h1>Soirée dansante du foot</h1>
+                <p class="hero__date">{{ event.date|format_datetime('full', 'none', locale: 'fr')|capitalize }} à {{ event.date|date('H') }}h · {{ event.place }}</p>
+                <p class="hero__menu">Soirée animée par un DJ. Au menu : {{ event.menu|join(' · ') }}.</p>
+                <p>Inscriptions jusqu'au <strong>{{ (event.closesAt ?? event.date)|format_datetime('long', 'none', locale: 'fr') }}</strong>.</p>
+                <p><strong>{{ (event.adultPrice / 100)|format_currency('EUR', locale: 'fr') }}</strong> par adulte · <strong>{{ (event.childPrice / 100)|format_currency('EUR', locale: 'fr') }}</strong> par enfant (moins de {{ event.childMaxAge + 1 }} ans)</p>
+            </div>
+            <img class="hero__crest" src="{{ asset('images/logo-uscl.svg') }}" alt="Écusson de l'US Cormeilles Lieurey" width="200" height="266">
+        </div>
+    </section>
+
+    <div class="container section">
+        {% if not open %}
+            <div class="card"><h2>Les inscriptions sont closes</h2><p>Contactez le club : <a href="mailto:{{ club.email }}">{{ club.email }}</a>.</p></div>
+        {% elseif seatsLeft <= 0 %}
+            <div class="card"><h2>Complet</h2><p>Les {{ event.capacity }} places sont prises. Écrivez-nous pour être mis sur liste d'attente : <a href="mailto:{{ club.email }}">{{ club.email }}</a>.</p></div>
+        {% else %}
+            <p class="seats {{ seatsLeft <= 30 ? 'seats--low' }}">{{ seatsLeft }} place{{ seatsLeft > 1 ? 's' }} restante{{ seatsLeft > 1 ? 's' }} sur {{ event.capacity }}</p>
+            {{ form_start(form, {attr: {class: 'booking-form', novalidate: 'novalidate', 'data-adult-price': event.adultPrice, 'data-child-price': event.childPrice, 'data-child-max-age': event.childMaxAge, 'data-seats-left': seatsLeft}}) }}
+                {{ form_errors(form) }}
+                <fieldset class="card">
+                    <legend>1. Vos coordonnées</legend>
+                    <p class="muted small">La personne qui réserve et qui paie. Votre billet vous sera envoyé par e-mail.</p>
+                    <div class="grid2">
+                        {{ form_row(form.firstName) }}
+                        {{ form_row(form.lastName) }}
+                        {{ form_row(form.email) }}
+                        {{ form_row(form.phone) }}
+                    </div>
+                </fieldset>
+
+                <fieldset class="card">
+                    <legend>2. Les convives</legend>
+                    <p class="muted small">Une ligne par personne (vous compris), avec son plat.</p>
+                    {{ form_errors(form.guests) }}
+                    <div data-guests data-prototype="{{ include('booking/_guest.html.twig', {guest: form.guests.vars.prototype, number: 0})|e('html_attr') }}" data-index="{{ form.guests|length }}">
+                        {% for guest in form.guests %}
+                            {{ include('booking/_guest.html.twig', {guest: guest, number: loop.index}) }}
+                        {% endfor %}
+                    </div>
+                    <button type="button" class="btn btn--ghost" data-add-guest>+ Ajouter une personne</button>
+                </fieldset>
+
+                <div class="card">
+                    <p class="total">Total : <strong data-total>0 €</strong> <span class="muted small" data-total-detail></span></p>
+                    {{ form_row(form.consent) }}
+                    <button type="submit" class="btn btn--primary btn--lg">Payer avec HelloAsso</button>
+                    <p class="muted small">Paiement sécurisé par carte bancaire. Aucun frais supplémentaire. Vos places sont retenues {{ event.holdMinutes }} minutes pendant le paiement.</p>
+                </div>
+            {{ form_end(form) }}
+        {% endif %}
+    </div>
+{% endblock %}

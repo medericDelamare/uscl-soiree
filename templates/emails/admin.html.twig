@@ -1,0 +1,7 @@
+{% extends 'emails/_layout.html.twig' %}
+
+{% block content %}
+    <p>Nouvelle réservation payée <strong>{{ booking.reference }}</strong> : {{ booking.fullName }} ({{ booking.email }}, {{ booking.phone }}).</p>
+    <ul>{% for guest in booking.guests %}<li>{{ guest.fullName }} ({{ guest.age }} ans) : {{ guest.meal.label }}{% if guest.comment %} (remarque : {{ guest.comment }}){% endif %}</li>{% endfor %}</ul>
+    <p>Total : {{ (booking.total / 100)|format_currency('EUR', locale: 'fr') }}</p>
+{% endblock %}

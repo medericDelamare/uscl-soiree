@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Contrôle à l'entrée{% endblock %}
+
+{% block body %}
+    <div class="container section" style="max-width:1100px">
+        <h1>Contrôle à l'entrée</h1>
+        <p class="counter"><strong>{{ present }}</strong> entrée{{ present > 1 ? 's' }} sur <strong>{{ expected }}</strong> attendues</p>
+        <div class="card">
+            <p>Scannez le QR code du billet avec l'appareil photo du téléphone : la réservation s'ouvre ici. Sans billet, retrouvez l'invité dans la liste ou cherchez par nom ou n° de réservation.</p>
+            <form method="get" class="search">
+                <input type="search" name="q" value="{{ term }}" placeholder="Nom, prénom ou SOI-XXXXXX" autocomplete="off" autofocus>
+                <button class="btn btn--primary btn--sm" type="submit">Chercher</button>
+            </form>
+        </div>
+        <div class="card">
+            <p class="muted">{{ results|length }} invité{{ results|length > 1 ? 's' }}{{ term|length >= 2 ? ' trouvé' ~ (results|length > 1 ? 's') }}</p>
+            {% for g in results %}
+                {% set b = g.booking %}
+                <form class="entry {{ g.checkedIn ? 'entry--done' }}" id="invite-{{ g.id }}" method="post" action="{{ path('control_checkin', {token: b.accessToken}) }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('checkin' ~ b.id) }}">
+                    <input type="hidden" name="guest" value="{{ g.id }}">
+                    <input type="hidden" name="back" value="list">
+                    <input type="hidden" name="q" value="{{ term }}">
+                    <span>
+                        <a href="{{ path('control_show', {token: b.accessToken}) }}"><strong>{{ g.fullName }}</strong></a> · {{ g.age }} ans<br>
+                        <span class="muted">{{ g.meal.label }} · {{ b.fullName }} ({{ b.reference }})</span>
+                        {% if g.comment %}<br><span class="note">⚠ {{ g.comment }}</span>{% endif %}
+                    </span>
+                    {% if g.checkedIn %}
+                        <span class="muted">Entré à {{ g.checkedInAt|date('H\\hi', 'Europe/Paris') }}</span>
+                        <button class="btn btn--ghost btn--sm" name="undo" value="1">Annuler</button>
+                    {% else %}
+                        <button class="btn btn--primary btn--sm">Valider l'entrée</button>
+                    {% endif %}
+                </form>
+            {% else %}
+                <p class="muted">Aucun invité trouvé.</p>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

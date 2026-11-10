@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Confidentialité{% endblock %}
+
+{% block body %}
+    <div class="container section prose">
+        <h1>Confidentialité</h1>
+        <p>{{ club.name }} organise la soirée dansante et traite les informations saisies dans le formulaire pour cela uniquement.</p>
+        <h2>Données collectées</h2>
+        <p>Pour le payeur : nom, prénom, e-mail et téléphone. Pour chaque convive : nom, prénom, âge (qui détermine le tarif enfant ou adulte) et choix du plat.</p>
+        <h2>Pourquoi</h2>
+        <p>Enregistrer votre réservation, vous envoyer votre billet, commander les repas, contrôler l'entrée et vous joindre en cas de problème. Aucune donnée n'est vendue ni utilisée à des fins commerciales.</p>
+        <h2>Paiement</h2>
+        <p>Le paiement est réalisé sur HelloAsso : le club ne voit jamais votre carte bancaire.</p>
+        <h2>Durée de conservation</h2>
+        <p>Les réservations sont supprimées {{ club.retention_months }} mois après la soirée.</p>
+        <h2>Vos droits</h2>
+        <p>Vous pouvez accéder à vos données, les corriger ou demander leur suppression en écrivant à <a href="mailto:{{ club.email }}">{{ club.email }}</a>.</p>
+    </div>
+{% endblock %}

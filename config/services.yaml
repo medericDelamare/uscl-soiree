@@ -1,0 +1,31 @@
+parameters:
+    # Réglages de la soirée : à adapter chaque année
+    app.event.name: 'Soirée dansante de l''US Cormeilles Lieurey'
+    app.event.date: '2027-01-23 20:00'
+    # Date limite d'inscription : jusqu'au 1er janvier inclus (null : jusqu'au jour de la soirée)
+    app.event.closes_at: '2027-01-01 23:59:59'
+    app.event.place: 'Salle des fêtes de Cormeilles'
+    app.event.capacity: 230
+    # Prix en centimes
+    app.event.adult_price: 2400
+    app.event.child_price: 1300
+    # Âge maximal du tarif enfant (moins de 13 ans)
+    app.event.child_max_age: 12
+    # Minutes pendant lesquelles les places d'une réservation non payée restent retenues
+    app.event.hold_minutes: 30
+    app.event.menu:
+        - 'Apéritif'
+        - 'Plat au choix : lasagnes & salade ou assiette anglaise'
+        - 'Fromage'
+        - 'Dessert'
+        - 'Café'
+    # Réservations conservées jusqu'à ce nombre de mois après la soirée (RGPD)
+    app.retention_months: 6
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\:
+        resource: '../src/'

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Soirée dansante{% endblock %} · US Cormeilles Lieurey</title>
+    <meta name="description" content="{% block description %}Réservez et payez en ligne votre place pour la soirée dansante de l'US Cormeilles Lieurey, le {{ event.date|format_datetime('long', 'none', locale: 'fr') }}.{% endblock %}">
+    <meta name="theme-color" content="#c8102e">
+    <link rel="icon" href="{{ asset('images/logo-uscl.svg') }}" type="image/svg+xml">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="fr_FR">
+    <meta property="og:title" content="{{ block('title') }} · US Cormeilles Lieurey">
+    <meta property="og:description" content="{{ block('description') }}">
+    {% block importmap %}{{ importmap('app') }}{% endblock %}
+</head>
+<body>
+    <div class="tricolor" aria-hidden="true"></div>
+    <header class="header">
+        <div class="container header__inner">
+            <a class="brand" href="{{ path('home') }}">
+                <img src="{{ asset('images/logo-uscl.svg') }}" alt="" width="44" height="58">
+                <span class="brand__name">US Cormeilles Lieurey<small>Soirée dansante</small></span>
+            </a>
+            {% if is_granted('ROLE_CONTROLE') %}
+                <nav class="nav"><a href="{{ path('control_home') }}">Contrôle</a>{% if is_granted('ROLE_ADMIN') %}<a href="{{ path('admin') }}">Admin</a>{% endif %}<a href="{{ path('logout') }}">Déconnexion</a></nav>
+            {% endif %}
+        </div>
+    </header>
+
+    {% set flashes = app.flashes %}
+    {% if flashes is not empty %}
+        <div class="container flashes">
+            {% for type, messages in flashes %}
+                {% for message in messages %}<div class="alert alert--{{ type }}" role="status">{{ message }}</div>{% endfor %}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <main>{% block body %}{% endblock %}</main>
+
+    <footer class="footer">
+        <div class="container footer__inner">
+            <div>© {{ 'now'|date('Y') }} {{ club.name }} · Paiement sécurisé HelloAsso · <a href="{{ path('privacy') }}">Confidentialité</a> · <a href="mailto:{{ club.email }}">{{ club.email }}</a></div>
+        </div>
+    </footer>
+</body>
+</html>

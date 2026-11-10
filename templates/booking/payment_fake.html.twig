@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Simulation de paiement{% endblock %}
+
+{% block body %}
+    <div class="container section">
+        <div class="card">
+            <h1>Simulation de paiement</h1>
+            <p class="muted">Environnement de développement : aucun paiement réel. Réservation {{ booking.reference }} · {{ (booking.total / 100)|format_currency('EUR', locale: 'fr') }}</p>
+            <form method="post">
+                <input type="hidden" name="_token" value="{{ csrf_token('fake' ~ booking.accessToken) }}">
+                <button class="btn btn--primary" name="pay" value="1">Payer</button>
+                <button class="btn btn--ghost" name="cancel" value="1">Annuler</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
