@@ -20,11 +20,22 @@ final class TicketQrCode
         return $this->urls->generate('control_show', ['token' => $booking->getAccessToken()], UrlGeneratorInterface::ABSOLUTE_URL);
     }
 
+    /** Adresse de contrôle d'un carton numéroté. */
+    public function urlForToken(string $token): string
+    {
+        return $this->urls->generate('control_show', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL);
+    }
+
     public function png(Booking $booking, int $size = 360): string
+    {
+        return $this->pngForUrl($this->url($booking), $size);
+    }
+
+    public function pngForUrl(string $url, int $size = 360): string
     {
         return (new Builder(
             writer: new PngWriter(),
-            data: $this->url($booking),
+            data: $url,
             errorCorrectionLevel: ErrorCorrectionLevel::Medium,
             size: $size,
             margin: 10,

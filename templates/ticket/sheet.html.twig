@@ -1,0 +1,108 @@
+{# Feuille imprimable des cartons : 3 cartons de 210 x 99 mm par page A4. Générée par app:ticket:sheet (jamais servie sur le site). #}
+{% set adult = (event.adultPrice / 100)|format_currency('EUR', {fraction_digit: 0}, 'fr') %}
+{% set child = (event.childPrice / 100)|format_currency('EUR', {fraction_digit: 0}, 'fr') %}
+{% set when = event.date|format_datetime(pattern: 'EEEE d MMMM y', locale: 'fr')|capitalize ~ ' · ' ~ (event.date|date('i') == '00' ? event.date|date('G\\h') : event.date|date('G\\hi')) %}
+{% set meals = [{short: 'Lasagnes', corner: 'Lasagnes'}, {short: 'Assiette anglaise', corner: 'Assiette'}] %}
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Cartons d'invitation</title>
+<style>
+@font-face{font-family:'Playfair Display';font-style:normal;font-weight:700;src:url(data:font/woff2;base64,{{ fonts.playfair }}) format('woff2')}
+@font-face{font-family:'Playfair Display';font-style:italic;font-weight:700;src:url(data:font/woff2;base64,{{ fonts.playfair_italic }}) format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:100 900;src:url(data:font/woff2;base64,{{ fonts.inter }}) format('woff2')}
+@page{size:A4;margin:0}
+html,body{margin:0;background:#fff}
+*{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.page{width:210mm;height:297mm;overflow:hidden;break-after:page;display:flex;flex-direction:column}
+.slot{width:210mm;height:99mm;flex:none;border-top:.2mm dashed #8a96a6;overflow:hidden}
+.slot:first-child{border-top:0}
+.slot .card{width:210mm;height:99mm;aspect-ratio:auto}
+
+.card{--blue:#0050a1;--navy:#00305f;--ink:#0f2236;--muted:#4d6076;--line:#cfdcec;--tint:#eef4fb;
+ container-type:inline-size;position:relative;width:100%;aspect-ratio:210/99;background:#fff;display:grid;grid-template-columns:25fr 75fr;overflow:hidden;
+ font-family:'Inter',system-ui,-apple-system,'Segoe UI',Arial,sans-serif;color:var(--ink)}
+.card *{box-sizing:border-box}
+/* Talon : rempli à la main par l'éducateur, gardé par le club */
+.stub{position:relative;padding:2.6cqw 2.4cqw 2.4cqw 2.8cqw;display:flex;flex-direction:column;gap:1.5cqw;background:var(--tint);border-right:.25cqw dashed var(--blue)}
+.cut{position:absolute;font-size:2.2cqw;line-height:1;color:var(--blue);background:#fff;padding:.2cqw .1cqw}
+.stub .cut{right:-1.15cqw;top:50%;transform:translateY(-50%)}
+.stub .k{font-size:1.3cqw;font-weight:700;letter-spacing:.2cqw;text-transform:uppercase;color:var(--blue)}
+.stub .no{font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:5cqw;line-height:1;color:var(--navy)}
+.stub .fill{display:flex;align-items:flex-end;font-size:1.5cqw;color:var(--muted);height:3.6cqw;border-bottom:.15cqw dotted #7f93ab}
+.stub .opts{display:flex;flex-wrap:wrap;gap:.7cqw 1.8cqw;font-size:1.55cqw;font-weight:600;color:var(--ink)}
+.opts span{display:inline-flex;align-items:center;gap:.6cqw;white-space:nowrap}
+.box{display:inline-block;width:1.55cqw;height:1.55cqw;border:.22cqw solid var(--blue);border-radius:.3cqw;background:#fff}
+.stub .paid{margin-top:auto;font-size:1.5cqw;color:var(--muted);display:flex;flex-wrap:wrap;gap:.6cqw 1.4cqw;align-items:center}
+/* Carton remis à l'invité */
+.main{position:relative;padding:2.8cqw 0 0 3.4cqw;background:radial-gradient(circle at 70% 0,rgba(0,80,161,.07) 0,rgba(0,80,161,0) 40%)}
+.main::after{content:"";position:absolute;left:0;right:22cqw;bottom:0;height:1.4cqw;background:var(--blue)}
+.left{width:40cqw}
+.head{display:flex;align-items:center;gap:1.6cqw}
+.crest{flex:none;width:8cqw;height:8cqw;border-radius:50%;background:#fff;border:.35cqw solid var(--blue);display:flex;align-items:center;justify-content:center}
+.crest .logo{height:5.9cqw;width:4.44cqw;background:url('data:image/svg+xml;base64,{{ logo }}') center/contain no-repeat}
+.club{font-family:'Playfair Display',Georgia,serif;font-style:italic;font-weight:700;color:var(--blue);font-size:2.1cqw;line-height:1.1}
+.title{font-family:'Playfair Display',Georgia,serif;font-style:italic;font-weight:700;color:var(--navy);font-size:4.1cqw;line-height:1.02;white-space:nowrap}
+.when{margin-top:1.6cqw;font-weight:800;font-size:2.3cqw;line-height:1.15}
+.where{font-weight:600;font-size:1.9cqw;color:var(--blue);margin-top:.3cqw}
+.menu{margin-top:.9cqw;font-size:1.45cqw;line-height:1.4;color:var(--muted)}
+.price{display:flex;flex-wrap:wrap;gap:.8cqw;margin-top:1.1cqw;align-items:center}
+.price span{font-size:1.45cqw;font-weight:700;color:var(--navy);border:.2cqw solid var(--blue);border-radius:99cqw;padding:.4cqw 1.1cqw;background:#fff;white-space:nowrap}
+.price .tomb{border-style:dashed;color:var(--blue)}
+.note{font-size:1.3cqw;font-style:italic;color:var(--muted);margin-top:1cqw;max-width:36cqw}
+.qrcol{position:absolute;left:45.4cqw;top:9.5cqw;width:15.4cqw;display:flex;flex-direction:column;align-items:center;gap:.7cqw}
+.qrbox{background:#fff;border:.25cqw solid var(--line);border-radius:1.2cqw;padding:1cqw}
+.qrbox img{display:block;width:13.4cqw;height:13.4cqw}
+.num{font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:2.4cqw;color:var(--navy);line-height:1}
+.hint{font-size:1.2cqw;font-weight:600;color:var(--muted);text-align:center;line-height:1.25}
+/* Coins à déchirer : un geste suffit pendant le service */
+.corner{position:absolute;right:0;width:22cqw;height:22cqw}
+.corner svg{position:absolute;inset:0;width:100%;height:100%}
+.corner.top{top:0}.corner.bot{bottom:0}
+.corner .txt{position:absolute;right:1.8cqw;text-align:right;line-height:1.15}
+.corner.top .txt{top:1.6cqw}.corner.bot .txt{bottom:1.6cqw}
+.corner .t{font-weight:800;font-size:2.1cqw;letter-spacing:.18cqw;text-transform:uppercase;color:var(--navy)}
+.corner .s{font-size:1.35cqw;font-weight:600;color:var(--muted);margin-top:.3cqw}
+.corner .opts{display:flex;flex-direction:column;align-items:flex-end;gap:.6cqw;margin-top:.9cqw;font-size:1.4cqw;font-weight:600}
+.corner .opts .box{width:1.4cqw;height:1.4cqw}
+.corner .n{font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:2.2cqw;color:var(--blue);margin-top:.7cqw}
+
+</style>
+</head>
+<body>
+{% for page in cards|batch(3) %}
+<section class="page">
+{% for c in page %}
+<div class="slot">
+{% set n = '%03d'|format(c.number) %}
+<div class="card">
+ <div class="stub"><span class="cut">✂</span>
+  <div class="k">Talon · Tombola</div><div class="no">N° {{ n }}</div>
+  <div class="fill">Nom</div><div class="fill">Prénom</div>
+  <div class="opts"><span><i class="box"></i>Adulte {{ adult }}</span><span><i class="box"></i>Enfant {{ child }}</span></div>
+  <div class="opts">{% for meal in meals %}<span><i class="box"></i>{{ meal.short }}</span>{% endfor %}</div>
+  <div class="paid">Payé le ____/____ <span><i class="box"></i>Espèces</span><span><i class="box"></i>Chèque</span></div>
+ </div>
+ <div class="main">
+  <div class="left">
+   <div class="head"><div class="crest"><div class="logo"></div></div><div><div class="club">{{ club.name }}</div><div class="title">Soirée dansante</div></div></div>
+   <div class="when">{{ when }}</div>
+   <div class="where">{{ event.place }}</div>
+   <div class="menu">{{ event.menu|join(' · ') }}</div>
+   <div class="price"><span>Adulte {{ adult }}</span><span>Enfant (moins de {{ event.childMaxAge + 1 }} ans) {{ child }}</span></div>
+   <div class="note">Afin de conserver une bonne ambiance, l'apéritif est servi jusqu'à 21h30.</div>
+  </div>
+  <div class="qrcol"><div class="qrbox"><img src="{{ c.qr }}" alt=""></div><div class="num">N° {{ n }}</div><div class="hint">1 carton = 1 personne<br>À présenter à l'entrée</div></div>
+  <div class="corner top"><svg viewBox="0 0 22 22" aria-hidden="true"><polygon points="0,0 22,0 22,22" fill="#eef4fb"/><line x1="0" y1="0" x2="22" y2="22" stroke="#0050a1" stroke-width=".3" stroke-dasharray="1 .7"/></svg>
+   <div class="txt"><div class="t">Repas</div><div class="opts">{% for meal in meals %}<span><i class="box"></i>{{ meal.corner }}</span>{% endfor %}</div><div class="n">{{ n }}</div></div></div>
+  <div class="corner bot"><svg viewBox="0 0 22 22" aria-hidden="true"><polygon points="0,22 22,22 22,0" fill="#eef4fb"/><line x1="0" y1="22" x2="22" y2="0" stroke="#0050a1" stroke-width=".3" stroke-dasharray="1 .7"/></svg>
+   <div class="txt"><div class="n" style="margin:0 0 .6cqw">{{ n }}</div><div class="s">Offert · jusqu'à 21h30</div><div class="t">Apéritif</div></div></div>
+ </div>
+</div>
+</div>
+{% endfor %}
+</section>
+{% endfor %}
+</body>
+</html>

@@ -8,6 +8,7 @@ use App\Payment\PaymentManager;
 use App\Form\GuestType;
 use App\Service\BookingFactory;
 use App\Service\BookingMailer;
+use App\Service\CardAssigner;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -44,6 +45,7 @@ final class BookingCrudController extends AbstractCrudController
     public function __construct(
         private readonly BookingFactory $factory,
         private readonly BookingMailer $mailer,
+        private readonly CardAssigner $cards,
     ) {
     }
 
@@ -102,8 +104,9 @@ final class BookingCrudController extends AbstractCrudController
             yield FormField::addFieldset('Convives (une ligne par place)');
             yield CollectionField::new('guests', 'Convives')
                 ->setEntryType(GuestType::class)->allowAdd()->allowDelete()->renderExpanded()
+                ->setFormTypeOption('entry_options', ['with_card' => true])
                 ->setFormTypeOption('by_reference', false)
-                ->setHelp('Le tarif est calculé selon l\'âge. La réservation est enregistrée comme déjà payée.');
+                ->setHelp('Le tarif est calculé selon l\'âge. La réservation est enregistrée comme déjà payée. Indiquez le numéro du carton remis à chaque personne pour l\'activer.');
             yield FormField::addFieldset('Paiement');
             yield ChoiceField::new('paymentProvider', 'Reçu en')->setChoices(self::MANUAL_PAYMENTS)->renderExpanded()->setRequired(true);
 
@@ -129,14 +132,21 @@ final class BookingCrudController extends AbstractCrudController
         $booking = $entityInstance;
         $booking->markPaid($booking->getPaymentProvider() ?? 'manuel', null);
 
+        if ([] !== $errors = $this->cards->check($booking)) {
+            $this->addFlash('danger', 'Réservation non enregistrée : '.implode(' ', $errors));
+
+            return;
+        }
+
         if (!$this->factory->place($booking)) {
             $this->addFlash('danger', sprintf('Réservation non enregistrée : il ne reste que %d place(s) sur la jauge.', $this->factory->seatsLeft()));
 
             return;
         }
 
+        $activated = $this->cards->assign($booking);
         $this->mailer->sendConfirmation($booking);
-        $this->addFlash('success', sprintf('Réservation %s enregistrée et marquée payée : le billet a été envoyé à %s.', $booking->getReference(), $booking->getEmail()));
+        $this->addFlash('success', sprintf('Réservation %s enregistrée et marquée payée : le billet a été envoyé à %s.%s', $booking->getReference(), $booking->getEmail(), $activated > 0 ? sprintf(' %d carton(s) activé(s).', $activated) : ''));
     }
 
     #[AdminRoute('/{entityId:booking.id}/marquer-payee', name: 'mark_paid', options: ['methods' => ['POST']])]
@@ -156,6 +166,7 @@ final class BookingCrudController extends AbstractCrudController
     public function cancelBooking(Booking $booking, EntityManagerInterface $em): Response
     {
         $booking->setStatus(BookingStatus::Cancelled);
+        $this->cards->release($booking);
         $em->flush();
         $this->addFlash('success', 'Réservation '.$booking->getReference().' annulée : ses places sont libérées.');
 

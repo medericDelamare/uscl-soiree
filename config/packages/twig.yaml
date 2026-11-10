@@ -1,5 +1,8 @@
 twig:
     file_name_pattern: '*.twig'
+    # Le PHP de l'hébergeur est en UTC : sans ceci, les heures affichées (mails, pages) sont décalées d'une heure.
+    date:
+        timezone: Europe/Paris
     globals:
         event: '@App\Event\EventInfo'
         club:

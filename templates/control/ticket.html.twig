@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Carton n° {{ ticket.number }}{% endblock %}
+
+{% block body %}
+    {% set guest = ticket.guest %}
+    <div class="container section" style="max-width:640px">
+        {% if guest is null %}
+            <div class="verdict verdict--ko">✖ Carton non attribué<small>Le carton n° {{ ticket.number }} n'a pas été enregistré avec un règlement. Orientez la personne vers le bureau.</small></div>
+        {% elseif not guest.booking.paid %}
+            <div class="verdict verdict--ko">✖ Billet non valable<small>Carton n° {{ ticket.number }} : la réservation {{ guest.booking.reference }} est {{ guest.booking.status.label|lower }}.</small></div>
+        {% elseif guest.checkedIn %}
+            <div class="verdict verdict--warn">Déjà entré<small>Carton n° {{ ticket.number }} : entré à {{ guest.checkedInAt|date('H\\hi', 'Europe/Paris') }}.</small></div>
+        {% else %}
+            <div class="verdict verdict--ok">✔ Carton valable<small>Carton n° {{ ticket.number }} : 1 personne à faire entrer.</small></div>
+        {% endif %}
+
+        {% if guest is not null and guest.booking.paid %}
+            <div class="card">
+                <form class="entry {{ guest.checkedIn ? 'entry--done' }}" method="post" action="{{ path('control_ticket_checkin', {token: ticket.token}) }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('carton' ~ ticket.id) }}">
+                    <span><strong>{{ guest.fullName }}</strong> · {{ guest.age }} ans<br><span class="muted">{{ guest.meal.label }}</span>{% if guest.comment %}<br><span class="note">⚠ {{ guest.comment }}</span>{% endif %}</span>
+                    {% if guest.checkedIn %}
+                        <button class="btn btn--ghost" name="undo" value="1">Annuler</button>
+                    {% else %}
+                        <button class="btn btn--primary">Valider l'entrée</button>
+                    {% endif %}
+                </form>
+                <p class="muted small">Réservation {{ guest.booking.reference }} · {{ guest.booking.fullName }} · <a href="{{ path('control_show', {token: guest.booking.accessToken}) }}">voir les {{ guest.booking.guests|length }} personne{{ guest.booking.guests|length > 1 ? 's' }}</a></p>
+            </div>
+        {% endif %}
+        <p><a href="{{ path('control_home') }}">← Chercher quelqu'un d'autre</a></p>
+    </div>
+{% endblock %}

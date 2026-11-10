@@ -7,9 +7,9 @@
         <h1>Contrôle à l'entrée</h1>
         <p class="counter"><strong>{{ present }}</strong> entrée{{ present > 1 ? 's' }} sur <strong>{{ expected }}</strong> attendues</p>
         <div class="card">
-            <p>Scannez le QR code du billet avec l'appareil photo du téléphone : la réservation s'ouvre ici. Sans billet, retrouvez l'invité dans la liste ou cherchez par nom ou n° de réservation.</p>
+            <p>Scannez le QR code du carton ou du billet avec l'appareil photo du téléphone : la personne ou la réservation s'ouvre ici. QR illisible : tapez le numéro du carton (ex. 42). Sans billet, cherchez par nom ou n° de réservation.</p>
             <form method="get" class="search">
-                <input type="search" name="q" value="{{ term }}" placeholder="Nom, prénom ou SOI-XXXXXX" autocomplete="off" autofocus>
+                <input type="search" name="q" value="{{ term }}" placeholder="N° de carton, nom, prénom ou SOI-XXXXXX" autocomplete="off" autofocus>
                 <button class="btn btn--primary btn--sm" type="submit">Chercher</button>
             </form>
         </div>

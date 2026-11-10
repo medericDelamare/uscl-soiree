@@ -31,10 +31,19 @@ final class GuestType extends AbstractType
                 'required' => false,
                 'attr' => ['maxlength' => 255, 'placeholder' => 'Végétarien, sans gluten, allergie aux arachides…', 'autocomplete' => 'off'],
             ]);
+
+        if ($options['with_card']) {
+            $builder->add('cardNumber', IntegerType::class, [
+                'label' => 'N° du carton remis',
+                'required' => false,
+                'attr' => ['min' => 1, 'inputmode' => 'numeric', 'placeholder' => 'Ex. 42', 'autocomplete' => 'off'],
+                'help' => 'Facultatif : numéro imprimé sur le carton remis à cette personne.',
+            ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(['data_class' => Guest::class]);
+        $resolver->setDefaults(['data_class' => Guest::class, 'with_card' => false]);
     }
 }

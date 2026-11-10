@@ -34,6 +34,20 @@ Tout est dans `config/services.yaml` (paramètres `app.event.*`) : date, lieu, p
 - **Back-office** : totaux par plat et catégorie pour le traiteur, liste des réservations et des convives, export Excel, « Marquer payée » pour un règlement en espèces ou par chèque (envoie le billet), annulation.
 - `app:booking:purge-old` supprime les données 6 mois après la soirée (annoncé dans la page confidentialité).
 
+## Cartons d'invitation numérotés (papier)
+
+Un carton par personne, imprimé à l'avance et remis par les éducateurs avec un règlement en chèque ou en espèces. Chaque carton a un numéro (aussi numéro de tombola, sur le talon), un QR code, et deux coins à déchirer (apéritif offert, repas) servis par les bénévoles.
+
+```bash
+php bin/console app:ticket:generate 250                 # crée les cartons 1 à 250 (relançable, ne touche pas à l'existant)
+php bin/console app:ticket:sheet --output=var/cartons/cartons.html   # feuille imprimable : 3 cartons par page A4
+```
+
+- Le HTML est autonome (polices, logo et QR codes embarqués). Le convertir en PDF avec Chrome : `--print-to-pdf=cartons.pdf --no-pdf-header-footer cartons.html`. Textes, prix et menu viennent de `app.event.*` (`config/services.yaml`).
+- **Attribution** : à la saisie d'une réservation dans l'admin (« Ajouter des invités (espèces / chèque) »), renseigner « N° du carton remis » pour chaque personne. Un numéro inconnu, déjà attribué ou saisi deux fois bloque l'enregistrement. Annuler une réservation libère ses cartons.
+- **Entrée** : le QR ouvre `/controle/<jeton>` : « Carton non attribué » (refusé), « Carton valable » (bouton *Valider l'entrée*) ou « Déjà entré ». QR illisible : taper le numéro du carton dans la recherche de `/controle`. Les QR des billets de réservation (e-mail) continuent de fonctionner.
+- Les jetons des cartons sont propres à chaque base : générer la feuille **sur le serveur** (les QR doivent correspondre à la base de production).
+
 ## Paiement
 
 - `PAYMENT_PROVIDER=fake` (dev) : une page simule le paiement.

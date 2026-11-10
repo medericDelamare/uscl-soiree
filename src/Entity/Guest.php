@@ -45,6 +45,21 @@ class Guest
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $checkedInAt = null;
 
+    /** Numéro du carton remis (saisie à la main dans l'admin, non enregistré ici : voir Ticket). */
+    private ?int $cardNumber = null;
+
+    public function getCardNumber(): ?int
+    {
+        return $this->cardNumber;
+    }
+
+    public function setCardNumber(?int $cardNumber): static
+    {
+        $this->cardNumber = $cardNumber;
+
+        return $this;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
