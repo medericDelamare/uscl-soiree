@@ -9,8 +9,8 @@ parameters:
     # Prix en centimes
     app.event.adult_price: 2400
     app.event.child_price: 1300
-    # Âge maximal du tarif enfant (moins de 13 ans)
-    app.event.child_max_age: 12
+    # Âge maximal du tarif enfant (moins de 12 ans)
+    app.event.child_max_age: 11
     # Minutes pendant lesquelles les places d'une réservation non payée restent retenues
     app.event.hold_minutes: 30
     app.event.menu:

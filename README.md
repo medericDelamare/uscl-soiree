@@ -27,7 +27,7 @@ Tout est dans `config/services.yaml` (paramètres `app.event.*`) : date, lieu, p
 
 ## Fonctionnement
 
-- Une **réservation** = un payeur (nom, prénom, e-mail, téléphone) + N **convives** (nom, prénom, âge, plat). Le tarif dépend de l'âge (moins de 13 ans : enfant), figé à la réservation.
+- Une **réservation** = un payeur (nom, prénom, e-mail, téléphone) + N **convives** (nom, prénom, âge, plat). Le tarif dépend de l'âge (moins de 12 ans : enfant), figé à la réservation.
 - Les places sont retenues 30 minutes pendant le paiement. `app:booking:purge-pending` (cron toutes les 15 min) annule les réservations expirées, après avoir revérifié auprès de HelloAsso.
 - La jauge est contrôlée sous verrou MySQL (`GET_LOCK`) : deux réservations simultanées ne peuvent pas dépasser 230 places.
 - **Billet** : un QR code par réservation, qui contient l'adresse `/controle/<jeton>`. Le bénévole connecté voit les convives et valide l'entrée de chacun (ou de tous), avec protection contre la réutilisation. Sans billet : recherche par nom.
