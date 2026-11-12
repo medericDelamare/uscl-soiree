@@ -9,7 +9,7 @@ ADD conf/php.ini /usr/local/etc/php/conf.d/override.ini
 
 RUN a2enmod rewrite headers
 
-RUN apt-get update && apt-get install -y \
+RUN sed -i "s|http://|https://|g" /etc/apt/sources.list.d/debian.sources && apt-get update && apt-get install -y \
     git unzip \
     libicu-dev \
     libzip-dev \
