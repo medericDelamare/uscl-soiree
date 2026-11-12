@@ -46,6 +46,12 @@ h2 { font-size: 1.6rem; }
 .eyebrow { font-family: var(--font-title); font-style: italic; color: var(--green-dark); font-size: 1.2rem; margin: 0 0 4px !important; }
 .hero__date { font-size: 1.2rem; font-weight: 600; }
 .hero__menu { color: var(--muted); }
+.hero__inner > div .menu-box { margin: 16px 0; padding: 14px 18px; background: #fff; border: 2px dashed var(--green); border-radius: var(--radius); }
+.menu-box__title { margin: 0 0 8px; font-size: 1.25rem; color: var(--green); }
+.hero__inner > div .menu-box__list { margin: 0 0 8px; padding: 0; list-style: none; font-size: 1.05rem; font-weight: 600; }
+.menu-box__list li { padding: 4px 0; border-bottom: 1px dotted var(--line); }
+.menu-box__list li:last-child { border-bottom: 0; }
+.hero__inner > div .menu-box__note { margin: 0; color: var(--muted); font-size: .95rem; }
 .hero__crest { justify-self: center; width: min(190px, 50vw); height: auto; padding: 14px; background: var(--paper); border-radius: 50%; border: 3px solid var(--green); box-shadow: var(--shadow); }
 @media (max-width: 680px) { .hero__inner { grid-template-columns: 1fr; padding: 28px 16px; } .hero__crest { width: 120px; grid-row: 1; } .hero__inner > div { padding: 20px; } }
 
